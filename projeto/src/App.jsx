@@ -6,6 +6,7 @@ import EditarOS from "./pages/EditarOS";
 import Login from "./pages/Login";
 import CadastroUsuario from "./pages/CadastroUsuario";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 import "./App.css";
 
 export default function App() {
@@ -49,14 +50,14 @@ export default function App() {
         }
       />
 
-    <Route
-      path="/usuarios/novo"
-      element={
-        <PrivateRoute>
-          <CadastroUsuario />
-        </PrivateRoute>
-      }
-    />
+      <Route
+        path="/usuarios/novo"
+        element={
+          <AdminRoute>
+            <CadastroUsuario />
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 }
