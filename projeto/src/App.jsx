@@ -4,6 +4,7 @@ import CadastroOS from "./pages/CadastroOS";
 import DetalheOS from "./pages/DetalheOS";
 import EditarOS from "./pages/EditarOS";
 import Login from "./pages/Login";
+import CadastroUsuario from "./pages/CadastroUsuario";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
 
@@ -47,6 +48,15 @@ export default function App() {
           </PrivateRoute>
         }
       />
+
+    <Route
+      path="/usuarios/novo"
+      element={
+        <PrivateRoute>
+          <CadastroUsuario />
+        </PrivateRoute>
+      }
+    />
     </Routes>
   );
 }

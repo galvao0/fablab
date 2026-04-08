@@ -58,6 +58,10 @@ export default function ListaOS() {
               Nova OS
             </button>
 
+            <button type="button" onClick={() => navigate("/usuarios/novo")}>
+              Novo Usuário
+            </button>
+            
             <button type="button" onClick={handleLogout}>
               Sair
             </button>
