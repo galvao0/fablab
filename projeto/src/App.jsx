@@ -5,6 +5,8 @@ import DetalheOS from "./pages/DetalheOS";
 import EditarOS from "./pages/EditarOS";
 import Login from "./pages/Login";
 import CadastroUsuario from "./pages/CadastroUsuario";
+import ListaUsuarios from "./pages/ListaUsuarios";
+import EditarUsuario from "./pages/EditarUsuario";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import FuncionarioRoute from "./components/FuncionarioRoute";
@@ -52,6 +54,15 @@ export default function App() {
       />
 
       <Route
+        path="/usuarios"
+        element={
+          <AdminRoute>
+            <ListaUsuarios />
+          </AdminRoute>
+        }
+      />
+
+      <Route
         path="/usuarios/novo"
         element={
           <AdminRoute>
@@ -59,6 +70,15 @@ export default function App() {
           </AdminRoute>
         }
       />
-    </Routes>
+
+      <Route
+          path="/usuarios/:id/editar"
+          element={
+            <AdminRoute>
+              <EditarUsuario />
+            </AdminRoute>
+          }
+        />
+      </Routes>
   );
 }

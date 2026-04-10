@@ -61,8 +61,8 @@ export default function ListaOS() {
             )}
 
             {usuarioLogado?.tipo === "admin" && (
-              <button type="button" onClick={() => navigate("/usuarios/novo")}>
-                Novo Usuário
+              <button type="button" onClick={() => navigate("/usuarios")}>
+                Gerenciar Usuários
               </button>
             )}
             

@@ -1,0 +1,124 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "./ListaUsuarios.css";
+
+export default function ListaUsuarios() {
+  const [usuarios, setUsuarios] = useState([]);
+  const navigate = useNavigate();
+
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
+
+  useEffect(() => {
+    carregarUsuarios();
+  }, []);
+
+  async function carregarUsuarios() {
+    try {
+      const resposta = await api.get("/usuarios");
+      setUsuarios(resposta.data);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao carregar usuários");
+    }
+  }
+
+  async function excluirUsuario(id) {
+    if (usuarioLogado?.id === id) {
+      alert("Você não pode excluir seu próprio usuário");
+      return;
+    }
+  
+    const confirmar = window.confirm("Deseja realmente excluir este usuário?");
+    if (!confirmar) return;
+  
+    try {
+      await api.delete(`/usuarios/${id}`, {
+        data: {
+          usuarioLogadoId: usuarioLogado.id
+        }
+      });
+  
+      alert("Usuário excluído com sucesso");
+      carregarUsuarios();
+    } catch (error) {
+      console.error(error);
+      alert(error?.response?.data?.erro || "Erro ao excluir usuário");
+    }
+  }
+
+  return (
+    <div className="container-usuarios">
+      <div className="painel-usuarios">
+        <div className="topo-usuarios">
+          <h2>Gerenciar Usuários</h2>
+
+          <div className="topo-usuarios-acoes">
+            <button type="button" onClick={() => navigate("/usuarios/novo")}>
+              Novo Usuário
+            </button>
+
+            <button type="button" onClick={() => navigate("/")}>
+              Voltar
+            </button>
+          </div>
+        </div>
+
+        <div className="tabela-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Data de cadastro</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {usuarios.length > 0 ? (
+                usuarios.map((usuario) => (
+                  <tr key={usuario.id}>
+                    <td>{usuario.id}</td>
+                    <td>{usuario.nome}</td>
+                    <td>{usuario.email}</td>
+                    <td>{usuario.tipo}</td>
+                    <td>
+                      {usuario.created_at
+                        ? new Date(usuario.created_at).toLocaleString("pt-BR")
+                        : "-"}
+                    </td>
+                    <td>
+                      <div className="acoes-tabela">
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/usuarios/${usuario.id}/editar`)}
+                        >
+                          Editar
+                        </button>
+
+                        {usuarioLogado?.id !== usuario.id && (
+                          <button
+                            type="button"
+                            onClick={() => excluirUsuario(usuario.id)}
+                          >
+                            Excluir
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">Nenhum usuário encontrado.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
