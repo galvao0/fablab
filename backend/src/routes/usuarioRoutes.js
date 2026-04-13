@@ -6,6 +6,7 @@ router.get("/", usuarioController.listarUsuarios);
 router.get("/:id", usuarioController.buscarUsuarioPorId);
 router.put("/:id", usuarioController.atualizarUsuario);
 router.put("/:id/senha", usuarioController.alterarSenhaUsuario);
-router.delete("/:id", usuarioController.excluirUsuario);
+router.put("/:id/desativar", usuarioController.desativarUsuario);
+router.put("/:id/reativar", usuarioController.reativarUsuario);
 
 module.exports = router;

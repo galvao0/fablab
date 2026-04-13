@@ -58,29 +58,45 @@ const atualizarUsuario = async (req, res) => {
     }
 };
 
-const excluirUsuario = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { usuarioLogadoId } = req.body;
+const desativarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { usuarioLogadoId } = req.body;
 
-        // impedir autoexclusão
-        if (Number(id) === Number(usuarioLogadoId)) {
-            return res.status(400).json({
-            erro: "Você não pode excluir seu próprio usuário"
-            });
-        }
-
-        const resultado = await usuarioModel.excluir(id);
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({ erro: "Usuário não encontrado" });
-        }
-
-        res.json({ mensagem: "Usuário excluído com sucesso" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ erro: "Erro ao excluir usuário" });
+    if (Number(id) === Number(usuarioLogadoId)) {
+      return res.status(400).json({
+        erro: "Você não pode desativar seu próprio usuário"
+      });
     }
+
+    const resultado = await usuarioModel.desativar(id);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    res.json({ mensagem: "Usuário desativado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao desativar usuário" });
+  }
+};
+
+const reativarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const resultado = await usuarioModel.reativar(id);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    res.json({ mensagem: "Usuário reativado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao reativar usuário" });
+  }
 };
 
 const alterarSenhaUsuario = async (req, res) => {
@@ -113,6 +129,7 @@ module.exports = {
   listarUsuarios,
   buscarUsuarioPorId,
   atualizarUsuario,
-  excluirUsuario,
+  desativarUsuario,
+  reativarUsuario,
   alterarSenhaUsuario
 };

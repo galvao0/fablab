@@ -23,7 +23,7 @@ const criar = async ({ nome, email, senha, tipo }) => {
 // funções abaixo para listar, update e delete de usuários
 const listar = async () => {
   const [rows] = await db.execute(`
-    SELECT id, nome, email, tipo, created_at
+    SELECT id, nome, email, tipo, ativo, created_at
     FROM usuarios
     ORDER BY id DESC
   `);
@@ -34,7 +34,7 @@ const listar = async () => {
 const buscarPorId = async (id) => {
   const [rows] = await db.execute(
     `
-    SELECT id, nome, email, tipo, created_at
+    SELECT id, nome, email, tipo, ativo, created_at
     FROM usuarios
     WHERE id = ?
     `,
@@ -57,9 +57,19 @@ const atualizar = async (id, { nome, email, tipo }) => {
   return resultado;
 };
 
-const excluir = async (id) => {
+// desativar e reativar usuário
+const desativar = async (id) => {
   const [resultado] = await db.execute(
-    `DELETE FROM usuarios WHERE id = ?`,
+    `UPDATE usuarios SET ativo = 0 WHERE id = ?`,
+    [id]
+  );
+
+  return resultado;
+};
+
+const reativar = async (id) => {
+  const [resultado] = await db.execute(
+    `UPDATE usuarios SET ativo = 1 WHERE id = ?`,
     [id]
   );
 
@@ -81,6 +91,7 @@ module.exports = {
   listar,
   buscarPorId,
   atualizar,
-  excluir,
+  desativar,
+  reativar,
   atualizarSenhaPorId
 };

@@ -57,6 +57,12 @@ const login = async (req, res) => {
       });
     }
 
+    if (!usuario.ativo) {
+      return res.status(403).json({
+        erro: "Usuário inativo. Procure um administrador."
+      });
+    }
+
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaCorreta) {

@@ -23,27 +23,36 @@ export default function ListaUsuarios() {
     }
   }
 
-  async function excluirUsuario(id) {
+  async function desativarUsuario(id) {
     if (usuarioLogado?.id === id) {
-      alert("Você não pode excluir seu próprio usuário");
+      alert("Você não pode desativar seu próprio usuário");
       return;
     }
   
-    const confirmar = window.confirm("Deseja realmente excluir este usuário?");
+    const confirmar = window.confirm("Deseja realmente desativar este usuário?");
     if (!confirmar) return;
   
     try {
-      await api.delete(`/usuarios/${id}`, {
-        data: {
-          usuarioLogadoId: usuarioLogado.id
-        }
+      await api.put(`/usuarios/${id}/desativar`, {
+        usuarioLogadoId: usuarioLogado.id
       });
   
-      alert("Usuário excluído com sucesso");
+      alert("Usuário desativado com sucesso");
       carregarUsuarios();
     } catch (error) {
       console.error(error);
-      alert(error?.response?.data?.erro || "Erro ao excluir usuário");
+      alert(error?.response?.data?.erro || "Erro ao desativar usuário");
+    }
+  }
+  
+  async function reativarUsuario(id) {
+    try {
+      await api.put(`/usuarios/${id}/reativar`);
+      alert("Usuário reativado com sucesso");
+      carregarUsuarios();
+    } catch (error) {
+      console.error(error);
+      alert(error?.response?.data?.erro || "Erro ao reativar usuário");
     }
   }
 
@@ -72,6 +81,7 @@ export default function ListaUsuarios() {
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Tipo</th>
+                <th>Status</th>
                 <th>Data de cadastro</th>
                 <th>Ações</th>
               </tr>
@@ -84,6 +94,7 @@ export default function ListaUsuarios() {
                     <td>{usuario.nome}</td>
                     <td>{usuario.email}</td>
                     <td>{usuario.tipo}</td>
+                    <td>{usuario.ativo ? "Ativo" : "Inativo"}</td>
                     <td>
                       {usuario.created_at
                         ? new Date(usuario.created_at).toLocaleString("pt-BR")
@@ -98,12 +109,21 @@ export default function ListaUsuarios() {
                           Editar
                         </button>
 
-                        {usuarioLogado?.id !== usuario.id && (
+                        {usuario.ativo ? (
+                          usuarioLogado?.id !== usuario.id && (
+                            <button
+                              type="button"
+                              onClick={() => desativarUsuario(usuario.id)}
+                            >
+                              Desativar
+                            </button>
+                          )
+                        ) : (
                           <button
                             type="button"
-                            onClick={() => excluirUsuario(usuario.id)}
+                            onClick={() => reativarUsuario(usuario.id)}
                           >
-                            Excluir
+                            Reativar
                           </button>
                         )}
                       </div>
@@ -112,7 +132,7 @@ export default function ListaUsuarios() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">Nenhum usuário encontrado.</td>
+                  <td colSpan="7">Nenhum usuário encontrado.</td>
                 </tr>
               )}
             </tbody>
