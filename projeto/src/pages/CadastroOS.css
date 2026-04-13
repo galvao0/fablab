@@ -31,12 +31,40 @@
     border: 1px solid #dcdcdc;
     border-radius: 8px;
   }
-  
-  h2 {
+
+  .topo-cadastro-os {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
     margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .topo-cadastro-os h2 {
+    margin: 0;
     font-size: 28px;
     color: #111;
-    text-align: center;
+  }
+  
+  .topo-cadastro-os button {
+    padding: 10px 14px;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .topo-cadastro-os button:hover {
+    background-color: #444;
+  }
+  
+  h2 {
+    font-size: 28px;
+    color: #111;
   }
   
   h3 {
@@ -105,14 +133,4 @@
   
   button:hover {
     background-color: #444;
-  }
-
-  .acoes-cadastro-os {
-    display: flex;
-    gap: 10px;
-    margin-top: 28px;
-  }
-  
-  .acoes-cadastro-os button {
-    flex: 1;
   }

@@ -135,8 +135,13 @@ export default function App() {
   return (
     <div className="container-os">
       <form onSubmit={handleSubmit}>
-        <h2>Cadastro de Ordem de Serviço</h2>
-
+        <div className="topo-cadastro-os">
+          <h2>Cadastro de Ordem de Serviço</h2>
+          <button type="button" onClick={() => navigate("/ordens")}>
+            Voltar
+          </button>
+        </div>
+      
         <h3>Dados do Solicitante</h3>
 
         <label>Tipo de solicitante:</label>
@@ -333,12 +338,7 @@ export default function App() {
           onChange={(e) => setObservacoes(e.target.value)}
         />
 
-        <div className="acoes-cadastro-os">
-          <button type="submit">Salvar OS</button>
-          <button type="button" onClick={() => navigate("/ordens")}>
-            Voltar
-          </button>
-        </div>
+        <button type="submit">Salvar OS</button>
       </form>
     </div>
   );
