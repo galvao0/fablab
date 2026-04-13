@@ -2,8 +2,92 @@ const osModel = require("../models/osModel");
 const PDFDocument = require("pdfkit");
 
 const criarOS = async (req, res) => {
+  //Lucas: Requerimento obrigatório dos dados do formulário
+
   try {
-    const resultado = await osModel.criar(req.body);
+    const {
+      tipo_solicitante,
+      setor_interno,
+      solicitante_externo,
+      contato,
+      nome_projeto,
+      descricao_projeto,
+      medida_final,
+      quantidade,
+      manipulacao_arquivo,
+      processos,
+      materiais,
+      observacoes,
+      usuario_id
+    } = req.body;
+
+    if (!tipo_solicitante) {
+      return res.status(400).json({ erro: "Tipo de solicitante é obrigatório" });
+    }
+
+    if (tipo_solicitante === "interno" && !setor_interno) {
+      return res.status(400).json({ erro: "Setor interno é obrigatório" });
+    }
+
+    if (
+      tipo_solicitante === "externo" &&
+      (!solicitante_externo || !solicitante_externo.trim())
+    ) {
+      return res.status(400).json({ erro: "Solicitante externo é obrigatório" });
+    }
+
+    if (!contato || !String(contato).trim()) {
+      return res.status(400).json({ erro: "Contato é obrigatório" });
+    }
+
+    if (!nome_projeto || !nome_projeto.trim()) {
+      return res.status(400).json({ erro: "Nome do projeto é obrigatório" });
+    }
+
+    if (!descricao_projeto || !descricao_projeto.trim()) {
+      return res.status(400).json({ erro: "Descrição do projeto é obrigatória" });
+    }
+
+    if (!medida_final || !String(medida_final).trim()) {
+      return res.status(400).json({ erro: "Medida final é obrigatória" });
+    }
+
+    if (!quantidade || Number(quantidade) < 1) {
+      return res.status(400).json({ erro: "Quantidade deve ser maior que 0" });
+    }
+
+    if (manipulacao_arquivo === undefined || manipulacao_arquivo === null) {
+      return res.status(400).json({ erro: "Informe se há manipulação de arquivo" });
+    }
+
+    if (!processos || !String(processos).trim()) {
+      return res.status(400).json({ erro: "Selecione ao menos um processo" });
+    }
+
+    if (!materiais || !String(materiais).trim()) {
+      return res.status(400).json({ erro: "Selecione ao menos um material" });
+    }
+
+    if (!usuario_id) {
+      return res.status(400).json({ erro: "Usuário é obrigatório" });
+    }
+
+    const resultado = await osModel.criar({
+      tipo_solicitante,
+      setor_interno: tipo_solicitante === "interno" ? setor_interno : null,
+      solicitante_externo:
+        tipo_solicitante === "externo" ? solicitante_externo.trim() : null,
+      contato: String(contato).trim(),
+      nome_projeto: nome_projeto.trim(),
+      descricao_projeto: descricao_projeto.trim(),
+      medida_final: String(medida_final).trim(),
+      quantidade: Number(quantidade),
+      manipulacao_arquivo,
+      processos: String(processos).trim(),
+      materiais: String(materiais).trim(),
+      observacoes: observacoes ? String(observacoes).trim() : null,
+      usuario_id
+    });
 
     res.status(201).json({
       mensagem: "Ordem de serviço cadastrada com sucesso",
@@ -120,7 +204,9 @@ const atualizarStatusOS = async (req, res) => {
 
 const gerarPDFOrdem = async (req, res) => {
   try {
-    const ordem = await osModel.buscarOrdem(id);
+    const id = Number(req.params.id);
+
+    const ordem = await osModel.buscarPorId(id);
 
     if (!ordem) {
       return res.status(404).json({ error: 'Ordem não encontrada' });
@@ -137,43 +223,113 @@ const gerarPDFOrdem = async (req, res) => {
     const doc = new PDFDocument();
     doc.pipe(res);
 
-    doc.fontSize(18).text(`Ordem de Serviço #${ordem.id}`, { align: 'center' });
+    function escreverCampo(label, valor) {
+      if (
+        valor === null ||
+        valor === undefined ||
+        String(valor).trim() === "" ||
+        valor === "-"
+      ) {
+        return;
+      }
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(12)
+        .text(`${label}: `, { continued: true })
+        .font("Helvetica")
+        .text(valor || "-");
 
-    doc.moveDown();
-    doc.fontSize(12);
+      doc.moveDown(0.8);
+    }
 
-    doc.text(`Tipo: ${ordem.tipo_solicitante}`);
-    doc.text(`Nome do Projeto: ${ordem.nome_projeto}`);
-    doc.text(`Setor Interno: ${ordem.setor_interno || '-'}`);
-    doc.text(`Solicitante Externo: ${ordem.solicitante_externo || '-'}`);
-    doc.text(`Contato: ${ordem.contato || '-'}`);
+    function escreverData(label, valor) {
+      if (
+        valor === null ||
+        valor === undefined ||
+        String(valor).trim() === "" ||
+        valor === "-"
+      ) {
+        return;
+      }
+      const dataFormatada = new Date(valor).toLocaleString("pt-BR");
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(12)
+        .text(`${label}: `, { continued: true })
+        .font("Helvetica")
+        .text(dataFormatada);
 
-    doc.moveDown();
-    doc.text(`Descrição: ${descricao}`);
+      doc.moveDown(0.8);
+    }
 
-    doc.moveDown();
-    doc.text(`Medida: ${ordem.medida_final || '-'}`);
-    doc.text(`Quantidade: ${ordem.quantidade || '-'}`);
-    doc.text(`Manipulação: ${ordem.manipulacao_arquivo ? 'Sim' : 'Não'}`);
+    function tituloSecao(titulo) {
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(16)
+        .text(titulo);
 
-    doc.moveDown();
-    doc.text(`Processos: ${ordem.processos || '-'}`);
-    doc.text(`Materiais: ${ordem.materiais || '-'}`);
-    doc.text(`Observações: ${ordem.observacoes || '-'}`);
+      const y = doc.y + 5;
+      doc
+        .moveTo(50, y)
+        .lineTo(545, y)
+        .strokeColor("#bdbdbd")
+        .stroke();
 
-    doc.moveDown();
-    doc.text(`Status: ${ordem.status || '-'}`);
-    doc.text(`Coordenador: ${ordem.coordenador_nome || '-'}`);
+      doc.moveDown(1.2);
+    }
 
-    doc.moveDown();
-    doc.text(`Data de Lançamento: ${ordem.data_lancamento || '-'}`);
-    doc.text(`Data de Autorização: ${ordem.data_autorizacao || '-'}`);
-    doc.text(`Data de Conclusão: ${ordem.data_conclusao || '-'}`);
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(18)
+      .text(`Ordem de Serviço #${ordem.id}`, { align: "center" });
+
+    doc.moveDown(1.5);
+
+    tituloSecao("Identificação");
+
+    escreverCampo("ID da OS", String(ordem.id));
+    escreverCampo("Status atual", ordem.status);
+    escreverData("Data de lançamento", ordem.data_lancamento);
+    escreverData("Data de autorização", ordem.data_autorizacao);
+    escreverData("Data de conclusão", ordem.data_conclusao);
+    escreverCampo("Atendente", ordem.nome_atendente);
+    escreverCampo("Email do atendente", ordem.email_atendente);
+
+    doc.moveDown(1.5);
+
+    tituloSecao("Dados do Solicitante");
+    escreverCampo("Tipo de solicitante", ordem.tipo_solicitante);
+    escreverCampo("Solicitante", ordem.setor_interno || ordem.solicitante_externo);
+    escreverCampo("Contato", ordem.contato);
+
+    doc.moveDown(1.5);
+
+    tituloSecao("Dados do Projeto");
+    escreverCampo("Projeto", ordem.nome_projeto);
+    escreverCampo("Descrição", ordem.descricao_projeto);
+    escreverCampo("Medida final", ordem.medida_final);
+    escreverCampo("Quantidade", ordem.quantidade);
+
+    doc.moveDown(1.5);
+
+    tituloSecao("Dados de Produção");
+    escreverCampo("Manipulação do arquivo", ordem.manipulacao_arquivo ? "Sim" : "Não");
+    escreverCampo("Processos", ordem.processos);
+    escreverCampo("Materiais", ordem.materiais);
+    escreverCampo("Observações", ordem.observacoes);
+
+    doc.moveDown(1.5);
+
+    if (ordem.coordenador_nome || ordem.motivo_recusa) {
+      tituloSecao("Dados da Coordenação")
+    }
+    escreverCampo("Coordenador", ordem.coordenador_nome || '-');
+    escreverCampo("Motivo da recusa", ordem.motivo_recusa || '-');
 
     doc.end();
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao gerar pdf' });
+    console.error("Erro ao gerar PDF:", err);
+    res.status(500).json({ erro: err.message });
   }
 }
 

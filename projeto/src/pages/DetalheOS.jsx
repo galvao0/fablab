@@ -12,6 +12,10 @@ export default function DetalheOS() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const handleGerarPDF = () => {
+    window.open(`http://localhost:3001/ordens/${os.id}/pdf`, "_blank");
+  };
+
   useEffect(() => {
     carregarOS();
   }, [id]);
@@ -92,7 +96,7 @@ export default function DetalheOS() {
               </button>
             )}
 
-            <button type="button" onClick={() => window.print()}>
+            <button type="button" onClick={handleGerarPDF}>
               Gerar PDF
             </button>
 
