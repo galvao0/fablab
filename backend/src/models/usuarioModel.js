@@ -9,6 +9,20 @@ const buscarPorEmail = async (email) => {
   return rows[0];
 };
 
+
+// Para verificar e evitar adicionar email já cadastrado para outro usuário ao editar usuário 
+const buscarPorEmailExcetoId = async (email, id) => {
+  const [rows] = await db.execute(
+    `
+    SELECT * FROM usuarios
+    WHERE email = ? AND id <> ?
+    `,
+    [email, id]
+  );
+
+  return rows[0];
+};
+
 const criar = async ({ nome, email, senha, tipo }) => {
   const [resultado] = await db.execute(
     `
@@ -87,6 +101,7 @@ const atualizarSenhaPorId = async (id, senha) => {
 
 module.exports = {
   buscarPorEmail,
+  buscarPorEmailExcetoId,
   criar,
   listar,
   buscarPorId,

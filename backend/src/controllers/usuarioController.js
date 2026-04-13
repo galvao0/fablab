@@ -45,6 +45,15 @@ const atualizarUsuario = async (req, res) => {
         });
         }
 
+        // impedir alterar email para outro já cadastrado em outro usuário
+        const emailExistente = await usuarioModel.buscarPorEmailExcetoId(email, id);
+
+        if (emailExistente) {
+          return res.status(400).json({
+            erro: "Já existe outro usuário com esse email"
+          });
+        }
+
         const resultado = await usuarioModel.atualizar(id, { nome, email, tipo });
 
         if (resultado.affectedRows === 0) {
