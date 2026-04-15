@@ -125,7 +125,7 @@ export default function App() {
 
       alert(resposta.data.mensagem);
       limparFormulario();
-      navigate("/");
+      navigate("/ordens");
     } catch (error) {
       console.error(error);
       alert(error?.response?.data?.erro || "Erro ao cadastrar ordem de serviço");
@@ -134,14 +134,14 @@ export default function App() {
 
   return (
     <div className="container-os">
-      <form onSubmit={handleSubmit}>
+      <form className="cadastro-os-form" onSubmit={handleSubmit}>
         <div className="topo-cadastro-os">
           <h2>Cadastro de Ordem de Serviço</h2>
           <button type="button" onClick={() => navigate("/ordens")}>
             Voltar
           </button>
         </div>
-      
+
         <h3>Dados do Solicitante</h3>
 
         <label>
@@ -159,7 +159,9 @@ export default function App() {
 
         {tipoSolicitante === "interno" && (
           <>
-            <label>Setor interno: <span className="campo-obrigatorio">*</span></label>
+            <label>
+              Setor interno <span className="campo-obrigatorio">*</span>
+            </label>
             <select
               value={setorInterno}
               onChange={(e) => setSetorInterno(e.target.value)}
@@ -176,7 +178,9 @@ export default function App() {
 
         {tipoSolicitante === "externo" && (
           <>
-            <label>Solicitante externo: <span className="campo-obrigatorio">*</span></label>
+            <label>
+              Solicitante externo <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={solicitanteExterno}
@@ -186,7 +190,7 @@ export default function App() {
           </>
         )}
 
-        <label>Contato (opcional):</label>
+        <label>Contato (opcional)</label>
         <input
           type="text"
           value={contato}
@@ -195,7 +199,9 @@ export default function App() {
 
         <h3>Dados do Projeto</h3>
 
-        <label>Nome do projeto <span className="campo-obrigatorio">*</span></label>
+        <label>
+          Nome do projeto <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="text"
           value={nomeProjeto}
@@ -203,21 +209,27 @@ export default function App() {
           required
         />
 
-        <label>Descrição do projeto: <span className="campo-obrigatorio">*</span></label>
+        <label>
+          Descrição do projeto <span className="campo-obrigatorio">*</span>
+        </label>
         <textarea
           value={descricaoProjeto}
           onChange={(e) => setDescricaoProjeto(e.target.value)}
           required
         />
 
-        <label>Medida final: <span className="campo-obrigatorio">*</span></label>
+        <label>
+          Medida final <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="text"
           value={medidaFinal}
           onChange={(e) => setMedidaFinal(e.target.value)}
         />
 
-        <label>Quantidade: <span className="campo-obrigatorio">*</span></label>
+        <label>
+          Quantidade <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="number"
           min="1"
@@ -233,7 +245,10 @@ export default function App() {
 
         <h3>Arquivo</h3>
 
-        <label>Necessita manipulação do arquivo? <span className="campo-obrigatorio">*</span></label>
+        <label>
+          Necessita manipulação do arquivo?{" "}
+          <span className="campo-obrigatorio">*</span>
+        </label>
         <select
           value={manipulacaoArquivo}
           onChange={(e) => setManipulacaoArquivo(e.target.value)}
@@ -244,10 +259,12 @@ export default function App() {
           <option value="0">Não</option>
         </select>
 
-        <h3>Processos Envolvidos <span className="campo-obrigatorio">*</span></h3>
+        <h3>
+          Processos Envolvidos <span className="campo-obrigatorio">*</span>
+        </h3>
 
         {listaProcessos.map((processo) => (
-          <div key={processo}>
+          <div className="checkbox-item" key={processo}>
             <label>
               <input
                 type="checkbox"
@@ -261,7 +278,7 @@ export default function App() {
           </div>
         ))}
 
-        <div>
+        <div className="checkbox-item">
           <label>
             <input
               type="checkbox"
@@ -279,7 +296,10 @@ export default function App() {
 
         {outroProcesso && (
           <>
-            <label>Informe outro processo: <span className="campo-obrigatorio">*</span></label>
+            <label>
+              Informe outro processo{" "}
+              <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={textoOutroProcesso}
@@ -289,10 +309,12 @@ export default function App() {
           </>
         )}
 
-        <h3>Materiais Utilizados <span className="campo-obrigatorio">*</span></h3>
+        <h3>
+          Materiais Utilizados <span className="campo-obrigatorio">*</span>
+        </h3>
 
         {listaMateriais.map((material) => (
-          <div key={material}>
+          <div className="checkbox-item" key={material}>
             <label>
               <input
                 type="checkbox"
@@ -306,7 +328,7 @@ export default function App() {
           </div>
         ))}
 
-        <div>
+        <div className="checkbox-item">
           <label>
             <input
               type="checkbox"
@@ -324,7 +346,10 @@ export default function App() {
 
         {outroMaterial && (
           <>
-            <label>Informe outro material: <span className="campo-obrigatorio">*</span></label>
+            <label>
+              Informe outro material{" "}
+              <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={textoOutroMaterial}
@@ -334,13 +359,15 @@ export default function App() {
           </>
         )}
 
-        <h3>Observações (opcional):</h3>
+        <h3>Observações (opcional)</h3>
         <textarea
           value={observacoes}
           onChange={(e) => setObservacoes(e.target.value)}
         />
 
-        <button type="submit">Salvar OS</button>
+        <div className="acoes-cadastro-os">
+          <button type="submit">Salvar OS</button>
+        </div>
       </form>
     </div>
   );

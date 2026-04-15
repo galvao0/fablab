@@ -7,10 +7,6 @@ export default function EditarOS() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    carregarOS();
-  }, [id]);
-
   const [tipoSolicitante, setTipoSolicitante] = useState("");
   const [setorInterno, setSetorInterno] = useState("");
   const [solicitanteExterno, setSolicitanteExterno] = useState("");
@@ -65,13 +61,16 @@ export default function EditarOS() {
     "Resina"
   ];
 
+  useEffect(() => {
+    carregarOS();
+  }, [id]);
+
   async function carregarOS() {
     try {
       const resposta = await api.get(`/ordens/${id}`);
       const os = resposta.data;
 
       setStatusAtual(os.status);
-
       setTipoSolicitante(os.tipo_solicitante || "");
       setSetorInterno(os.setor_interno || "");
       setSolicitanteExterno(os.solicitante_externo || "");
@@ -86,6 +85,7 @@ export default function EditarOS() {
       const processosArray = os.processos
         ? os.processos.split(", ").filter((item) => !item.startsWith("Outro:"))
         : [];
+
       const materiaisArray = os.materiais
         ? os.materiais.split(", ").filter((item) => !item.startsWith("Outro:"))
         : [];
@@ -104,15 +104,21 @@ export default function EditarOS() {
       if (outroProc) {
         setOutroProcesso(true);
         setTextoOutroProcesso(outroProc.replace("Outro: ", ""));
+      } else {
+        setOutroProcesso(false);
+        setTextoOutroProcesso("");
       }
 
       if (outroMat) {
         setOutroMaterial(true);
         setTextoOutroMaterial(outroMat.replace("Outro: ", ""));
+      } else {
+        setOutroMaterial(false);
+        setTextoOutroMaterial("");
       }
     } catch (error) {
       console.error(error);
-      alert("Erro ao carregar OS");
+      alert(error?.response?.data?.erro || "Erro ao carregar OS");
     }
   }
 
@@ -124,7 +130,7 @@ export default function EditarOS() {
     }
   }
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     try {
@@ -133,7 +139,7 @@ export default function EditarOS() {
         setor_interno: tipoSolicitante === "interno" ? setorInterno : null,
         solicitante_externo:
           tipoSolicitante === "externo" ? solicitanteExterno : null,
-        contato,
+        contato: contato || null,
         nome_projeto: nomeProjeto,
         descricao_projeto: descricaoProjeto,
         medida_final: medidaFinal,
@@ -155,19 +161,22 @@ export default function EditarOS() {
       navigate(`/ordens/${id}`);
     } catch (error) {
       console.error(error);
-      alert("Erro ao atualizar OS");
+      alert(error?.response?.data?.erro || "Erro ao atualizar OS");
     }
-  };
+  }
 
   if (statusAtual && statusAtual !== "pendente") {
     return (
       <div className="container-os">
-        <form>
-          <h2>Editar Ordem de Serviço</h2>
+        <form className="cadastro-os-form">
+          <div className="topo-cadastro-os">
+            <h2>Editar Ordem de Serviço</h2>
+            <button type="button" onClick={() => navigate(`/ordens/${id}`)}>
+              Voltar
+            </button>
+          </div>
+
           <p>Somente ordens pendentes podem ser editadas.</p>
-          <button type="button" onClick={() => navigate(`/ordens/${id}`)}>
-            Voltar
-          </button>
         </form>
       </div>
     );
@@ -175,7 +184,7 @@ export default function EditarOS() {
 
   return (
     <div className="container-os">
-      <form onSubmit={handleSubmit}>
+      <form className="cadastro-os-form" onSubmit={handleSubmit}>
         <div className="topo-cadastro-os">
           <h2>Editar Ordem de Serviço</h2>
           <button type="button" onClick={() => navigate(`/ordens/${id}`)}>
@@ -185,7 +194,9 @@ export default function EditarOS() {
 
         <h3>Dados do Solicitante</h3>
 
-        <label>Tipo de solicitante:</label>
+        <label>
+          Tipo de solicitante <span className="campo-obrigatorio">*</span>
+        </label>
         <select
           value={tipoSolicitante}
           onChange={(e) => setTipoSolicitante(e.target.value)}
@@ -198,7 +209,9 @@ export default function EditarOS() {
 
         {tipoSolicitante === "interno" && (
           <>
-            <label>Setor interno:</label>
+            <label>
+              Setor interno <span className="campo-obrigatorio">*</span>
+            </label>
             <select
               value={setorInterno}
               onChange={(e) => setSetorInterno(e.target.value)}
@@ -215,7 +228,9 @@ export default function EditarOS() {
 
         {tipoSolicitante === "externo" && (
           <>
-            <label>Solicitante externo:</label>
+            <label>
+              Solicitante externo <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={solicitanteExterno}
@@ -225,7 +240,7 @@ export default function EditarOS() {
           </>
         )}
 
-        <label>Contato:</label>
+        <label>Contato (opcional)</label>
         <input
           type="text"
           value={contato}
@@ -234,7 +249,9 @@ export default function EditarOS() {
 
         <h3>Dados do Projeto</h3>
 
-        <label>Nome do projeto:</label>
+        <label>
+          Nome do projeto <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="text"
           value={nomeProjeto}
@@ -242,21 +259,27 @@ export default function EditarOS() {
           required
         />
 
-        <label>Descrição do projeto:</label>
+        <label>
+          Descrição do projeto <span className="campo-obrigatorio">*</span>
+        </label>
         <textarea
           value={descricaoProjeto}
           onChange={(e) => setDescricaoProjeto(e.target.value)}
           required
         />
 
-        <label>Medida final:</label>
+        <label>
+          Medida final <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="text"
           value={medidaFinal}
           onChange={(e) => setMedidaFinal(e.target.value)}
         />
 
-        <label>Quantidade:</label>
+        <label>
+          Quantidade <span className="campo-obrigatorio">*</span>
+        </label>
         <input
           type="number"
           min="1"
@@ -272,7 +295,10 @@ export default function EditarOS() {
 
         <h3>Arquivo</h3>
 
-        <label>Necessita manipulação do arquivo?</label>
+        <label>
+          Necessita manipulação do arquivo?{" "}
+          <span className="campo-obrigatorio">*</span>
+        </label>
         <select
           value={manipulacaoArquivo}
           onChange={(e) => setManipulacaoArquivo(e.target.value)}
@@ -283,9 +309,12 @@ export default function EditarOS() {
           <option value="0">Não</option>
         </select>
 
-        <h3>Processos Envolvidos</h3>
+        <h3>
+          Processos Envolvidos <span className="campo-obrigatorio">*</span>
+        </h3>
+
         {listaProcessos.map((processo) => (
-          <div key={processo}>
+          <div className="checkbox-item" key={processo}>
             <label>
               <input
                 type="checkbox"
@@ -299,7 +328,7 @@ export default function EditarOS() {
           </div>
         ))}
 
-        <div>
+        <div className="checkbox-item">
           <label>
             <input
               type="checkbox"
@@ -315,7 +344,10 @@ export default function EditarOS() {
 
         {outroProcesso && (
           <>
-            <label>Informe outro processo:</label>
+            <label>
+              Informe outro processo{" "}
+              <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={textoOutroProcesso}
@@ -324,9 +356,12 @@ export default function EditarOS() {
           </>
         )}
 
-        <h3>Materiais Utilizados</h3>
+        <h3>
+          Materiais Utilizados <span className="campo-obrigatorio">*</span>
+        </h3>
+
         {listaMateriais.map((material) => (
-          <div key={material}>
+          <div className="checkbox-item" key={material}>
             <label>
               <input
                 type="checkbox"
@@ -340,7 +375,7 @@ export default function EditarOS() {
           </div>
         ))}
 
-        <div>
+        <div className="checkbox-item">
           <label>
             <input
               type="checkbox"
@@ -356,7 +391,10 @@ export default function EditarOS() {
 
         {outroMaterial && (
           <>
-            <label>Informe outro material:</label>
+            <label>
+              Informe outro material{" "}
+              <span className="campo-obrigatorio">*</span>
+            </label>
             <input
               type="text"
               value={textoOutroMaterial}
@@ -365,13 +403,15 @@ export default function EditarOS() {
           </>
         )}
 
-        <h3>Observações</h3>
+        <h3>Observações (opcional)</h3>
         <textarea
           value={observacoes}
           onChange={(e) => setObservacoes(e.target.value)}
         />
 
-        <button type="submit">Salvar alterações</button>
+        <div className="acoes-cadastro-os">
+          <button type="submit">Salvar alterações</button>
+        </div>
       </form>
     </div>
   );

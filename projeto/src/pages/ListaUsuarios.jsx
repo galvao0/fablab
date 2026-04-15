@@ -66,7 +66,12 @@ export default function ListaUsuarios() {
     <div className="container-usuarios">
       <div className="painel-usuarios">
         <div className="topo-usuarios">
-          <h2>Gerenciar Usuários</h2>
+          <div className="topo-info">
+            <h2>Gerenciamento de Usuários</h2>
+            <p className="usuario-logado">
+              Usuário: {usuarioLogado?.nome || "Não identificado"}
+            </p>
+          </div>
 
           <div className="topo-usuarios-acoes">
             <button type="button" onClick={() => navigate("/usuarios/novo")}>

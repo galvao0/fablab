@@ -1,0 +1,43 @@
+.app-header {
+    width: 100%;
+    background-color: #222;
+    color: #fff;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .app-header-logo h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  .app-header-acoes {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .header-link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: #f2f2f2;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    width: auto;
+    display: inline;
+  }
+  
+  .header-link-button:hover {
+    color: #ff2525;
+    text-decoration: underline;
+  }

@@ -27,11 +27,6 @@
     flex-wrap: wrap;
   }
   
-  .topo-usuarios h2 {
-    margin: 0;
-    color: #111;
-  }
-  
   .topo-usuarios-acoes {
     display: flex;
     gap: 10px;
@@ -52,6 +47,11 @@
   .topo-usuarios button:hover,
   .acoes-tabela button:hover {
     background-color: #444;
+  }
+
+  .topo-info h2 {
+    margin: 0;
+    color: #111;
   }
   
   .tabela-wrapper {
