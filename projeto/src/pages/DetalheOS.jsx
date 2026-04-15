@@ -83,33 +83,38 @@ export default function DetalheOS() {
   return (
     <div className="container-detalhe">
       <div className="painel-detalhe">
-        <div className="topo-detalhe">
-          <h2>Detalhes da OS #{os.id}</h2>
+      <div className="topo-detalhe">
+        <h2>Detalhes da OS #{os.id}</h2>
 
-          <div style={{ display: "flex", gap: "10px" }}>
-            {os.status === "pendente" && (
-              <button
-                type="button"
-                onClick={() => navigate(`/ordens/${os.id}/editar`)}
-              >
-                Editar
-              </button>
-            )}
-
-            <button type="button" onClick={handleGerarPDF}>
-              Gerar PDF
+        <div className="topo-acoes">
+          {os.status === "pendente" && (
+            <button
+              type="button"
+              onClick={() => navigate(`/ordens/${os.id}/editar`)}
+            >
+              Editar
             </button>
+          )}
 
-            <button type="button" onClick={() => navigate("/")}>
-              Voltar
-            </button>
-          </div>
+          <button type="button" onClick={handleGerarPDF}>
+            Gerar PDF
+          </button>
+
+          <button type="button" onClick={() => navigate("/ordens")}>
+            Voltar
+          </button>
         </div>
+      </div>
 
         <div className="bloco-info">
           <h3>Identificação</h3>
           <p><strong>ID da OS:</strong> {os.id}</p>
-          <p><strong>Status atual:</strong> {os.status}</p>
+          <p>
+            <strong>Status atual:</strong>{" "}
+            <span className={`status-os status-${os.status}`}>
+              {os.status}
+            </span>
+          </p>
           <p>
             <strong>Data de lançamento:</strong>{" "}
             {os.data_lancamento
