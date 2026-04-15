@@ -6,6 +6,7 @@ import "../App.css";
 
 export default function LayoutFuncionario() {
   const navigate = useNavigate();
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -16,7 +17,7 @@ export default function LayoutFuncionario() {
   return (
     <FuncionarioRoute>
       <div className="app-layout">
-        <Header onLogout={handleLogout} />
+        <Header usuario={usuarioLogado} onLogout={handleLogout} />
 
         <main className="app-main">
           <Outlet />

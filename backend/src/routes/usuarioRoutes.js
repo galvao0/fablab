@@ -8,5 +8,6 @@ router.put("/:id", usuarioController.atualizarUsuario);
 router.put("/:id/senha", usuarioController.alterarSenhaUsuario);
 router.put("/:id/desativar", usuarioController.desativarUsuario);
 router.put("/:id/reativar", usuarioController.reativarUsuario);
+router.put("/:id/perfil", usuarioController.atualizarPerfil);
 
 module.exports = router;

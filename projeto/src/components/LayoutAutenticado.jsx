@@ -1,10 +1,10 @@
+//layout comum para qualquer usuário logado
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import AdminRoute from "./AdminRoute";
-import "../App.css";
+import AuthenticatedRoute from "./AuthenticatedRoute";
 
-export default function LayoutAdmin() {
+export default function LayoutAutenticado() {
   const navigate = useNavigate();
   const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
 
@@ -15,7 +15,7 @@ export default function LayoutAdmin() {
   }
 
   return (
-    <AdminRoute>
+    <AuthenticatedRoute>
       <div className="app-layout">
         <Header usuario={usuarioLogado} onLogout={handleLogout} />
 
@@ -25,6 +25,6 @@ export default function LayoutAdmin() {
 
         <Footer />
       </div>
-    </AdminRoute>
+    </AuthenticatedRoute>
   );
 }

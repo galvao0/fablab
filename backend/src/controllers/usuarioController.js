@@ -134,11 +134,54 @@ const alterarSenhaUsuario = async (req, res) => {
     }
 };
 
+const atualizarPerfil = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, email } = req.body;
+
+    if (!nome || !email) {
+      return res.status(400).json({
+        erro: "Nome e email são obrigatórios"
+      });
+    }
+
+    const usuario = await usuarioModel.buscarPorId(id);
+
+    if (!usuario) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    const emailExistente = await usuarioModel.buscarPorEmailExcetoId(email, id);
+
+    if (emailExistente) {
+      return res.status(400).json({
+        erro: "Já existe outro usuário com esse email"
+      });
+    }
+
+    const resultado = await usuarioModel.atualizar(id, {
+      nome,
+      email,
+      tipo: usuario.tipo
+    });
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    res.json({ mensagem: "Perfil atualizado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao atualizar perfil" });
+  }
+};
+
 module.exports = {
   listarUsuarios,
   buscarUsuarioPorId,
   atualizarUsuario,
   desativarUsuario,
   reativarUsuario,
-  alterarSenhaUsuario
+  alterarSenhaUsuario,
+  atualizarPerfil
 };

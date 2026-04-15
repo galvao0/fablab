@@ -6,38 +6,81 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 24px;
-  }
-  
-  .app-header-logo h1 {
+}
+
+.app-header-logo h1 {
     margin: 0;
     font-size: 24px;
     font-weight: 700;
     color: #fff;
-  }
-  
-  .app-header-acoes {
+}
+
+.perfil-menu-wrapper {
+    position: relative;
+}
+
+.perfil-botao {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background-color: #fff;
+    color: #222;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 16px;
-  }
-  
-  .header-link-button {
-    background: none;
+    justify-content: center;
+}
+
+.perfil-botao:hover {
+    background-color: #eaeaea;
+}
+
+.perfil-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    min-width: 220px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.perfil-dropdown-topo {
+    padding: 14px 16px;
+    border-bottom: 1px solid #ececec;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.perfil-dropdown-topo strong {
+    color: #111;
+    font-size: 14px;
+}
+
+.perfil-dropdown-topo span {
+    color: #666;
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.perfil-dropdown-item {
+    width: 100%;
     border: none;
-    padding: 0;
-    margin: 0;
-    color: #f2f2f2;
-    font-size: 15px;
-    font-weight: 500;
-    font-family: inherit;
+    background: none;
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #222;
     cursor: pointer;
-    text-decoration: none;
-    width: auto;
-    display: inline;
-  }
-  
-  .header-link-button:hover {
-    color: #ff2525;
-    text-decoration: underline;
-  }
+}
+
+.perfil-dropdown-item:hover {
+    background-color: #f5f5f5;
+}

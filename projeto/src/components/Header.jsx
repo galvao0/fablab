@@ -1,16 +1,73 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
-export default function Header({ onLogout }) {
+export default function Header({ usuario, onLogout }) {
+  const [menuAberto, setMenuAberto] = useState(false);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleClickFora(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuAberto(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickFora);
+    return () => {
+      document.removeEventListener("mousedown", handleClickFora);
+    };
+  }, []);
+
+  const inicial = usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : "U";
+
   return (
     <header className="app-header">
       <div className="app-header-logo">
         <h1>FabLab</h1>
       </div>
 
-      <div className="app-header-acoes">
-        <button type="button" className="header-link-button" onClick={onLogout}>
-          Sair
+      <div className="perfil-menu-wrapper" ref={menuRef}>
+        <button
+          type="button"
+          className="perfil-botao"
+          onClick={() => setMenuAberto(!menuAberto)}
+          title="Abrir menu do usuário"
+        >
+          {inicial}
         </button>
+
+        {menuAberto && (
+          <div className="perfil-dropdown">
+            <div className="perfil-dropdown-topo">
+              <strong>{usuario?.nome || "Usuário"}</strong>
+              <span>{usuario?.email || ""}</span>
+            </div>
+
+            <button
+              type="button"
+              className="perfil-dropdown-item"
+              onClick={() => {
+                setMenuAberto(false);
+                navigate("/perfil");
+              }}
+            >
+              Meu perfil
+            </button>
+
+            <button
+              type="button"
+              className="perfil-dropdown-item"
+              onClick={() => {
+                setMenuAberto(false);
+                onLogout();
+              }}
+            >
+              Sair
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

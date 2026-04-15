@@ -1,0 +1,90 @@
+.container-perfil {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  
+  .form-perfil {
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 32px;
+  }
+  
+  .topo-perfil {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .topo-perfil h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #111;
+  }
+  
+  .topo-perfil button {
+    width: auto;
+    margin-top: 0;
+    padding: 10px 14px;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .topo-perfil button:hover {
+    background-color: #444;
+  }
+  
+  .form-perfil label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 14px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .form-perfil input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #222;
+  }
+  
+  .form-perfil input:focus {
+    outline: none;
+    border-color: #666;
+  }
+  
+  .acoes-perfil {
+    margin-top: 28px;
+  }
+  
+  .acoes-perfil button {
+    width: 100%;
+    padding: 12px;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .acoes-perfil button:hover {
+    background-color: #444;
+  }
