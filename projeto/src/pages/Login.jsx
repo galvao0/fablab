@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import imagemFundo from "../assets/img-fablab.jpg"
 import "./Login.css";
 
 export default function Login() {
@@ -30,28 +31,33 @@ export default function Login() {
   }
 
   return (
-    <div className="container-login">
-      <form className="form-login" onSubmit={handleLogin}>
-        <h2>Login</h2>
+    <div
+      className="container-login"
+      style={{ backgroundImage: `url(${imagemFundo})` }}
+    >
+      <div className="overlay-login">
+        <form className="form-login" onSubmit={handleLogin}>
+          <h2>Login</h2>
 
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <label>Senha</label>
-        <input
-          type="password"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-        />
+          <label>Senha</label>
+          <input
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
 
-        <button type="submit">Entrar</button>
-      </form>
+          <button type="submit">Entrar</button>
+        </form>
+      </div>
     </div>
   );
 }
