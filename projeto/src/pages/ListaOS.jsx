@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "./ListaOS.css";
+import { FaSignOutAlt, FaEllipsisH, FaTimesCircle, FaCheck, FaClock  } from "react-icons/fa";
 
 export default function ListaOS() {
   const [ordens, setOrdens] = useState([]);
@@ -66,7 +67,8 @@ export default function ListaOS() {
               </button>
             )}
             
-            <button type="button" onClick={handleLogout}>
+            <button type="button" className="button-diversi" onClick={handleLogout}>
+              <FaSignOutAlt />
               Sair
             </button>
           </div>
@@ -99,13 +101,13 @@ export default function ListaOS() {
         </div>
 
         <div className="tabela-wrapper">
-          <table>
+          <table className="tabela">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Projeto</th>
                 <th>Status</th>
-                <th>Data de lançamento</th>
+                <th>Data</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -114,19 +116,31 @@ export default function ListaOS() {
                 ordensFiltradas.map((os) => (
                   <tr key={os.id}>
                     <td>{os.id}</td>
-                    <td>{os.nome_projeto}</td>
+                    <td style={{ fontWeight: 'bold' }}>{os.nome_projeto}</td>
                     <td>
                       <span className={`status-os status-${os.status}`}>
                         {os.status}
+                        {os.status === 'recusada' && (
+                          <FaTimesCircle  />
+                        )}
+                        {os.status === 'aprovada' && (
+                            <FaCheck />
+                        )}
+                        {os.status === 'pendente' && (
+                            <FaClock />
+                        )}
                       </span>
                     </td>
-                    <td>{new Date(os.data_lancamento).toLocaleString("pt-BR")}</td>
+                    <td>
+                      {new Date(os.data_lancamento).toLocaleDateString("pt-BR")}
+                    </td>
                     <td>
                       <button
+                        className="piu"
                         type="button"
                         onClick={() => navigate(`/ordens/${os.id}`)}
                       >
-                        Ver detalhes
+                        <FaEllipsisH  />
                       </button>
                     </td>
                   </tr>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import "./DetalheOS.css";
+import { FaFilePdf, FaEdit } from 'react-icons/fa'
 
 export default function DetalheOS() {
   const [os, setOs] = useState(null);
@@ -92,11 +93,13 @@ export default function DetalheOS() {
               type="button"
               onClick={() => navigate(`/ordens/${os.id}/editar`)}
             >
+              <FaEdit />
               Editar
             </button>
           )}
 
           <button type="button" onClick={handleGerarPDF}>
+            <FaFilePdf  />
             Gerar PDF
           </button>
 

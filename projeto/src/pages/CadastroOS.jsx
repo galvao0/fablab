@@ -366,7 +366,7 @@ export default function App() {
         />
 
         <div className="acoes-cadastro-os">
-          <button type="submit">Salvar OS</button>
+          <button type="submit">Salvar</button>
         </div>
       </form>
     </div>
